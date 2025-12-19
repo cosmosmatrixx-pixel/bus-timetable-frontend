@@ -55,13 +55,18 @@ function loadRoutes() {
       routeList.innerHTML = "No routes";
       return;
     }
+ 
     routeList.innerHTML = data.map(r => `
-      <div class="route-card">
-        <b>${r.bus}</b>
-        <button onclick="editRoute(${r.id})">Edit</button>
-        <button onclick="deleteRoute(${r.id})">Delete</button>
-      </div>
-    `).join("");
+  <div class="route-card">
+    <div class="route-name">${r.bus}</div>
+    <div class="route-actions">
+      <button class="edit-btn" onclick="editRoute(${r.id})">Edit</button>
+      <button class="delete-btn" onclick="deleteRoute(${r.id})">Delete</button>
+    </div>
+  </div>
+`).join("");
+
+
   });
 }
 loadRoutes();

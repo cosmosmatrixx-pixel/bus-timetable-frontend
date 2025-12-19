@@ -9,18 +9,24 @@
 <div class="login-wrapper">
   <div class="login-card">
 
-    <h2>Admin Login</h2>
+    <h2>🔐 Admin Login</h2>
 
-    <input id="username" placeholder="Username">
-    <input id="password" type="password" placeholder="Password">
+    <div class="input-group">
+      <input id="username" placeholder="Username">
+    </div>
 
-    <button type="button" onclick="login()">Login</button>
+    <div class="input-group">
+      <input id="password" type="password" placeholder="Password">
+    </div>
+
+    <button type="button" class="login-btn" onclick="login()">Login</button>
 
     <a href="forgot-password.html" class="forgot-link">
       Forgot Password?
     </a>
 
-    <p id="msg"></p>
+    <p id="msg" class="error-msg"></p>
+
   </div>
 </div>
 
@@ -28,11 +34,12 @@
 const API = "https://bus-timetable-backend.onrender.com";
 
 function login() {
-  const username = usernameInput.value.trim();
-  const password = passwordInput.value.trim();
+  const username = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value.trim();
+  const msg = document.getElementById("msg");
 
   if (!username || !password) {
-    msg.innerText = "Enter username & password";
+    msg.innerText = "⚠️ Enter username & password";
     return;
   }
 
@@ -50,17 +57,13 @@ function login() {
       localStorage.setItem("adminToken", data.token);
       window.location.href = "dashboard.html";
     } else {
-      msg.innerText = "Invalid credentials";
+      msg.innerText = "❌ Invalid username or password";
     }
   })
   .catch(() => {
-    msg.innerText = "Server error";
+    msg.innerText = "🚫 Server error. Try again.";
   });
 }
-
-const usernameInput = document.getElementById("username");
-const passwordInput = document.getElementById("password");
-const msg = document.getElementById("msg");
 </script>
 
 </body>

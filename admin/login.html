@@ -33,7 +33,7 @@ function login() {
   const username = document.getElementById("username").value;
   const password = document.getElementById("password").value;
 
-  fetch("https://bus-timetable-backend.onrender.com", {
+  fetch("https://bus-timetable-backend.onrender.com/admin/login", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"

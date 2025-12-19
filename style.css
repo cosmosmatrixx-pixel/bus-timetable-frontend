@@ -46,7 +46,7 @@ body {
    Container (Card Style)
    ========================= */
 .container {
-  min-height: 100%;
+  /* min-height: 100%; */
   max-width: 900px;
   margin: 40px auto;
   background: var(--card);

@@ -19,7 +19,10 @@
   const from = params.get("from");
   const to = params.get("to");
 
-  fetch(`http://localhost:3000/search?from=${from}&to=${to}`)
+const API = "https://bus-timetable-backend.onrender.com";
+
+fetch(`${API}/search?from=${from}&to=${to}`)
+
     .then(res => res.json())
     .then(data => {
       let html = "";

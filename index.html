@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="style.css">
+  <title>Bus Time Table</title>
+</head>
+<body>
+<div class="search-wrapper">
+  <div class="search-card">
+
+    <h2>🚌 Bus Time Table</h2>
+
+    <div class="form-group">
+      <input id="from" placeholder="From (जैसे: Panipat)">
+    </div>
+
+    <div class="form-group">
+      <input id="to" placeholder="To (जैसे: Chandigarh)">
+    </div>
+
+    <button class="search-btn" onclick="search()">Search</button>
+    
+
+    <div class="telegram-box">
+      📢 <a href="https://t.me/yourchannel" target="_blank">
+        अपनी जानकारी Telegram पर साझा करें
+      </a>
+    </div>
+
+    <div id="results"></div>
+
+  </div>
+</div>
+
+<script>
+function search() {
+  console.log("Search clicked");
+}
+</script>
+
+<script>
+function search() {
+  const from = document.getElementById("from").value.trim();
+  const to = document.getElementById("to").value.trim();
+
+  if (!from || !to) {
+    alert("Please enter From and To");
+    return;
+  }
+
+  window.location.href =
+    `result.html?from=${from}&to=${to}`;
+}
+</script>
+
+
+</body>
+
+
+</html>
+

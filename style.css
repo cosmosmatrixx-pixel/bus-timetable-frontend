@@ -1,0 +1,539 @@
+/* =========================
+   Global Reset & Variables
+   ========================= */
+:root {
+  --primary: #2563eb;
+  --primary-dark: #1e40af;
+  --success: #16a34a;
+  --danger: #dc2626;
+  --warning: #f59e0b;
+  --bg: #f1f5f9;
+  --card: #ffffff;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --radius: 12px;
+  --shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+/* =========================
+   Page Layout
+   ========================= */
+body {
+  background: linear-gradient(135deg, #e0e7ff, #f8fafc);
+  min-height: 100vh;
+  color: var(--text);
+}
+
+/* =========================
+   Container (Card Style)
+   ========================= */
+.container {
+  max-width: 900px;
+  margin: 40px auto;
+  background: var(--card);
+  padding: 28px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+/* =========================
+   Headings
+   ========================= */
+h2 {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white;
+  padding: 16px;
+  border-radius: var(--radius);
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+h3 {
+  margin-top: 30px;
+  margin-bottom: 15px;
+  font-size: 18px;
+  color: var(--primary-dark);
+  border-left: 5px solid var(--primary);
+  padding-left: 10px;
+}
+
+/* =========================
+   Inputs & Textarea
+   ========================= */
+input,
+textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  border: 1px solid #d1d5db;
+  font-size: 15px;
+  transition: 0.2s;
+}
+
+input:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
+}
+
+/* =========================
+   Buttons
+   ========================= */
+button {
+  padding: 12px 18px;
+  border-radius: var(--radius);
+  border: none;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button:hover {
+  transform: translateY(-1px);
+  opacity: 0.95;
+}
+
+/* Primary button */
+button {
+  background: var(--primary);
+  color: white;
+}
+
+/* =========================
+   Logout Button
+   ========================= */
+.logout-btn {
+  float: right;
+  background: var(--danger);
+}
+
+/* =========================
+   Messages
+   ========================= */
+#msg,
+#pwdMsg {
+  margin-top: 12px;
+  color: var(--success);
+  font-weight: 600;
+}
+
+/* =========================
+   Route List (Cards)
+   ========================= */
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  padding: 14px;
+  border-radius: var(--radius);
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* =========================
+   Action Buttons
+   ========================= */
+li button {
+  padding: 8px 12px;
+  font-size: 14px;
+  margin-left: 6px;
+}
+
+/* Edit */
+li button:first-child {
+  background: var(--success);
+}
+
+/* Delete */
+li button:last-child {
+  background: var(--danger);
+}
+
+/* =========================
+   Mobile Responsive
+   ========================= */
+@media (max-width: 600px) {
+
+  .container {
+    margin: 15px;
+    padding: 20px;
+  }
+
+  h2 {
+    font-size: 18px;
+  }
+
+  h3 {
+    font-size: 16px;
+  }
+
+  li {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  li button {
+    width: 100%;
+    margin: 6px 0 0;
+  }
+
+  .logout-btn {
+    float: none;
+    width: 100%;
+    margin-bottom: 15px;
+  }
+}
+
+
+/* =========================
+   Dashboard Header
+   ========================= */
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  padding: 16px 20px;
+  border-radius: var(--radius);
+  margin-bottom: 25px;
+}
+
+.dashboard-header h2 {
+  background: none;
+  padding: 0;
+  margin: 0;
+  color: white;
+  font-size: 20px;
+}
+
+/* Logout button */
+.logout-btn {
+  background: var(--danger);
+  padding: 8px 16px;
+  font-size: 14px;
+  border-radius: 20px;
+}
+
+
+
+
+/* Route list item */
+#routeList li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Bus name */
+.route-name {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+/* Buttons container */
+.route-actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* Edit */
+.route-actions button:first-child {
+  background: #16a34a;
+}
+
+/* Delete */
+.route-actions button:last-child {
+  background: #dc2626;
+}
+
+
+
+@media (max-width: 600px) {
+  #routeList li {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .route-actions {
+    width: 100%;
+  }
+
+  .route-actions button {
+    width: 100%;
+  }
+}
+
+
+
+/* =========================
+   Admin Login Page
+   ========================= */
+
+.login-wrapper {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #e0e7ff, #f8fafc);
+}
+
+.login-card {
+  width: 100%;
+  max-width: 380px;
+  background: white;
+  padding: 30px 28px;
+  border-radius: 14px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.login-card h2 {
+  background: linear-gradient(135deg, #2563eb, #1e40af);
+  color: white;
+  padding: 14px;
+  border-radius: 10px;
+  margin-bottom: 25px;
+}
+
+.login-card input {
+  margin-bottom: 15px;
+}
+
+.login-card button {
+  width: 100%;
+  margin-top: 5px;
+}
+
+.forgot-link {
+  display: inline-block;
+  margin-top: 15px;
+  font-size: 14px;
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.forgot-link:hover {
+  text-decoration: underline;
+}
+
+#msg {
+  margin-top: 15px;
+  font-weight: 600;
+  color: red;
+}
+
+
+
+
+/* =========================
+   User Search Page (Public)
+   ========================= */
+
+.search-wrapper {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #e0e7ff, #f8fafc);
+  padding: 20px;
+}
+
+.search-card {
+  width: 100%;
+  max-width: 520px;
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+}
+
+.search-card h2 {
+  background: linear-gradient(135deg, #2563eb, #1e40af);
+  color: white;
+  padding: 16px;
+  border-radius: 12px;
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+.search-card input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  font-size: 16px;
+}
+
+.search-card input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
+}
+
+.search-btn {
+  width: 100%;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 12px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.search-btn:hover {
+  background: #1e40af;
+}
+
+/* Telegram box */
+.telegram-box {
+  margin-top: 20px;
+  padding: 12px;
+  background: #eef2ff;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.telegram-box a {
+  color: #1d4ed8;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.telegram-box a:hover {
+  text-decoration: underline;
+}
+
+/* Results */
+#result {
+  margin-top: 25px;
+}
+
+
+
+
+/* =========================
+   Result Page – Polished UI
+   ========================= */
+
+.result-card {
+  margin-bottom: 25px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+  overflow: hidden;
+}
+
+/* Bus name header */
+.result-header {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white;
+  padding: 14px 18px;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+/* Station list */
+.station-list {
+  padding: 16px;
+}
+
+/* Each station row */
+.station-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+  background: #f8fafc;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+}
+
+/* Station name */
+.station-name {
+  font-size: 15px;
+  color: var(--text);
+}
+
+/* Time badge */
+.station-time {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1d4ed8;
+  background: #eef2ff;
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+
+
+/* =========================
+   Share Button (WhatsApp)
+   ========================= */
+
+.share-btn {
+  float: right;
+  background: #25D366;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  font-size: 13px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.share-btn:hover {
+  opacity: 0.9;
+}
+
+
+/* =========================
+   Result Header Fix (IMPORTANT)
+   ========================= */
+
+.result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+/* WhatsApp Share Button */
+.share-btn {
+  background: #25D366;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  font-size: 13px;
+  border-radius: 20px;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.share-btn:hover {
+  opacity: 0.9;
+}

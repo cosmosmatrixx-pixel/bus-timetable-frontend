@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bus Results</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+
+  <h2>🚌 Available Buses</h2>
+
+  <div id="result">Loading...</div>
+
+</div>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const from = params.get("from");
+  const to = params.get("to");
+
+  fetch(`http://localhost:3000/search?from=${from}&to=${to}`)
+    .then(res => res.json())
+    .then(data => {
+      let html = "";
+
+      if (!data || data.length === 0) {
+        html = "<p>No bus found.</p>";
+        document.getElementById("result").innerHTML = html;
+        return;
+      }
+
+      data.forEach(bus => {
+       html += `
+  <div class="result-card">
+    <div class="result-header">
+      🚌 ${bus.bus}
+
+      <button class="share-btn"
+        onclick="shareRoute('${bus.bus}', '${from}', '${to}')">
+        📤 Share
+      </button>
+    </div>
+    <div class="station-list">
+`;
+
+
+        bus.stations.forEach(s => {
+          html += `
+            <div class="station-item">
+              <span class="station-name">${s.name}</span>
+              <span class="station-time">${s.time}</span>
+            </div>
+          `;
+        });
+
+        html += `
+            </div>
+          </div>
+        `;
+      });
+
+      document.getElementById("result").innerHTML = html;
+    });
+
+
+
+
+    function shareRoute(busName, from, to) {
+  const siteLink = window.location.origin + "/index.html";
+//   const siteLink = "https://yourdomain.com";
+
+
+  const message =
+    `🚌 *Bus Route*\n` +
+    `Bus: ${busName}\n` +
+    `From: ${from}\n` +
+    `To: ${to}\n\n` +
+    `🔗 Check timetable here:\n${siteLink}`;
+
+  const whatsappUrl =
+    "https://wa.me/?text=" + encodeURIComponent(message);
+
+  window.open(whatsappUrl, "_blank");
+}
+
+</script>
+
+</body>
+</html>

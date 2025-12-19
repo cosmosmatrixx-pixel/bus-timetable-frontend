@@ -2,60 +2,60 @@
 <html>
 <head>
   <title>Admin Login</title>
-    <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../style.css">
 </head>
+
 <body>
-  <div class="login-wrapper">
-    <div class="login-card">
+<div class="login-wrapper">
+  <div class="login-card">
 
-      <h2>Admin Login</h2>
+    <h2>Admin Login</h2>
 
-      <input type="text" id="username" placeholder="Username">
-      <input type="password" id="password" placeholder="Password">
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Password">
 
-      <button onclick="login()">Login</button>
+    <button onclick="login()">Login</button>
 
-      <a href="forgot-password.html" class="forgot-link">
-        Forgot Password?
-      </a>
+    <a href="forgot-password.html" class="forgot-link">
+      Forgot Password?
+    </a>
 
-      <p id="msg"></p>
+    <p id="msg"></p>
 
-    </div>
   </div>
-
-
-
-
+</div>
 
 <script>
+const API = "https://bus-timetable-backend.onrender.com";
+
 function login() {
-  const username = document.getElementById("username").value;
-  const password = document.getElementById("password").value;
+  const username = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value.trim();
 
-fetch("https://bus-timetable-backend.onrender.com/admin/login", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({ username, password })
-})
+  if (!username || !password) {
+    alert("Please enter username and password");
+    return;
+  }
 
+  fetch(`${API}/admin/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username, password })
+  })
   .then(res => res.json())
   .then(data => {
     if (data.success) {
-      // 🔐 Token save
       localStorage.setItem("adminToken", data.token);
-
-      // Dashboard पर redirect
       window.location.href = "dashboard.html";
     } else {
-      alert("Invalid username or password");
+      document.getElementById("msg").innerText = "Invalid credentials";
     }
+  })
+  .catch(() => {
+    alert("Login failed. Try again.");
   });
 }
 </script>
-
 
 </body>
 </html>

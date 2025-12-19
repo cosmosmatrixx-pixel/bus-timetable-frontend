@@ -3,104 +3,60 @@
 <head>
   <title>Admin Dashboard</title>
   <meta http-equiv="Cache-Control" content="no-store" />
-<meta http-equiv="Pragma" content="no-cache" />
-<meta http-equiv="Expires" content="0" />
-
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <link rel="stylesheet" href="../style.css">
 </head>
 
 <body>
 <div class="container">
 
-
-
 <div class="dashboard-header">
   <h2>Admin Dashboard</h2>
   <button class="logout-btn" onclick="logout()">Logout</button>
 </div>
 
-
-<h3>Add New Bus Route</h3>
+<h3>Add / Edit Bus Route</h3>
 
 <input id="bus" placeholder="Bus Name">
 <br><br>
 
-<textarea id="stations" rows="6" cols="40"
-placeholder="Station,Time
-Panipat,08:00
-Karnal,09:00
-Ambala,10:30"></textarea>
+<textarea id="stations" rows="6" placeholder="Station,Time"></textarea>
 <br><br>
 
-<button onclick="addRoute()">Add Route</button>
-
-
-
+<button onclick="addRoute()">Save Route</button>
 <p id="msg"></p>
 
 <h3>Change Password</h3>
 
 <input type="password" id="oldPassword" placeholder="Old Password">
 <br><br>
-
 <input type="password" id="newPassword" placeholder="New Password">
 <br><br>
 
 <button onclick="changePassword()">Change Password</button>
-
 <p id="pwdMsg"></p>
-
 
 <h3>All Routes</h3>
 <div id="routeList"></div>
 
-
-
-
 <script>
-window.addEventListener("pageshow", function (event) {
-  if (event.persisted) {
-    window.location.reload();
-  }
-});
-</script>
-
-
-
-<!-- 🔐 TOKEN CHECK -->
-<script>
+const API = "https://bus-timetable-backend.onrender.com";
 const token = localStorage.getItem("adminToken");
 
 if (!token) {
-  alert("Please login first");
   window.location.replace("login.html");
 }
-</script>
 
-
-
-
-<!-- 📥 LOAD ROUTES -->
-<script>
+/* LOAD ROUTES */
 function loadRoutes() {
-  fetch("https://bus-timetable-backend.onrender.com/admin/routes", {
-    headers: {
-      Authorization: "Bearer " + token
-    }
+  fetch(`${API}/admin/routes`, {
+    headers: { Authorization: "Bearer " + token }
   })
-  .then(res => {
-    if (res.status === 401) {
-      alert("Session expired. Please login again.");
-      localStorage.removeItem("adminToken");
-      window.location.href = "login.html";
-      return;
-    }
-    return res.json();
-  })
+  .then(res => res.json())
   .then(data => {
     if (!data || data.length === 0) {
-      document.getElementById("routeList").innerHTML =
-        "<p>No routes found</p>";
+      routeList.innerHTML = "<p>No routes found</p>";
       return;
     }
 
@@ -108,51 +64,38 @@ function loadRoutes() {
     data.forEach(r => {
       html += `
         <li>
-    <span class="route-name">${r.bus}</span>
-
-    <div class="route-actions">
-      <button onclick="editRoute(${r.id})">Edit</button>
-      <button onclick="deleteRoute(${r.id})">Delete</button>
-    </div>
-  </li>
-      `;
+          <span class="route-name">${r.bus}</span>
+          <div class="route-actions">
+            <button onclick="editRoute(${r.id})">Edit</button>
+            <button onclick="deleteRoute(${r.id})">Delete</button>
+          </div>
+        </li>`;
     });
     html += "</ul>";
-    document.getElementById("routeList").innerHTML = html;
+    routeList.innerHTML = html;
   });
 }
 loadRoutes();
-</script>
 
-<!-- ➕ ADD / UPDATE ROUTE -->
-<script>
+/* ADD / UPDATE */
 function addRoute() {
-  const bus = document.getElementById("bus").value.trim();
-  const stationsText = document.getElementById("stations").value;
+  const bus = busInput.value.trim();
+  const stations = stationsInput.value.split("\n")
+    .map(l => l.split(","))
+    .filter(p => p.length === 2)
+    .map(p => ({ name: p[0], time: p[1] }));
 
-  const stations = stationsText
-    .split("\n")
-    .filter(line => line.trim() !== "")
-    .map(line => {
-      const parts = line.split(",");
-      return { name: parts[0], time: parts[1] };
-    });
-
-  // ✅ VALIDATION (correct place)
   if (!bus || stations.length < 2) {
-    alert("Please enter bus name and at least 2 stations");
+    alert("Enter bus name & at least 2 stations");
     return;
   }
 
-  const isEdit = window.currentEditId !== undefined;
-  const url = isEdit
-    ? `http://localhost:3000/admin/update-route/${window.currentEditId}`
-    : "http://localhost:3000/admin/add-route";
-
-  const method = isEdit ? "PUT" : "POST";
+  const url = window.currentEditId
+    ? `${API}/admin/update-route/${window.currentEditId}`
+    : `${API}/admin/add-route`;
 
   fetch(url, {
-    method: method,
+    method: window.currentEditId ? "PUT" : "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: "Bearer " + token
@@ -160,113 +103,66 @@ function addRoute() {
     body: JSON.stringify({ bus, stations })
   })
   .then(res => res.json())
-  .then(data => {
-    alert(data.message);
-
-    document.getElementById("bus").value = "";
-    document.getElementById("stations").value = "";
+  .then(() => {
+    busInput.value = "";
+    stationsInput.value = "";
     window.currentEditId = undefined;
-
     loadRoutes();
   });
 }
-</script>
 
-<!-- ❌ DELETE -->
-<script>
+/* DELETE */
 function deleteRoute(id) {
-  if (!confirm("Are you sure?")) return;
+  if (!confirm("Delete this route?")) return;
 
-  fetch(`http://localhost:3000/admin/delete-route/${id}`, {
+  fetch(`${API}/admin/delete-route/${id}`, {
     method: "DELETE",
-    headers: {
-      Authorization: "Bearer " + token
-    }
+    headers: { Authorization: "Bearer " + token }
   })
-  .then(res => res.json())
-  .then(data => {
-    alert(data.message);
-    loadRoutes();
-  });
+  .then(() => loadRoutes());
 }
-</script>
 
-<!-- ✏️ EDIT -->
-<script>
+/* EDIT */
 function editRoute(id) {
-  fetch(`http://localhost:3000/admin/route/${id}`, {
-    headers: {
-      Authorization: "Bearer " + token
-    }
+  fetch(`${API}/admin/route/${id}`, {
+    headers: { Authorization: "Bearer " + token }
   })
   .then(res => res.json())
-  .then(route => {
-    if (!route) return;
-
-    document.getElementById("bus").value = route.bus;
-
-    let text = "";
-    route.stations.forEach(s => {
-      text += `${s.name},${s.time}\n`;
-    });
-    document.getElementById("stations").value = text;
-
+  .then(r => {
+    busInput.value = r.bus;
+    stationsInput.value = r.stations.map(s => `${s.name},${s.time}`).join("\n");
     window.currentEditId = id;
   });
 }
-</script>
 
-<script>
+/* CHANGE PASSWORD */
 function changePassword() {
-  const oldPassword = document.getElementById("oldPassword").value;
-  const newPassword = document.getElementById("newPassword").value;
-
-  if (!oldPassword || !newPassword) {
-    alert("Please fill both fields");
-    return;
-  }
-
-  fetch("http://localhost:3000/admin/change-password", {
+  fetch(`${API}/admin/change-password`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: "Bearer " + token
     },
     body: JSON.stringify({
-      oldPassword: oldPassword,
-      newPassword: newPassword
+      oldPassword: oldPassword.value,
+      newPassword: newPassword.value
     })
   })
   .then(res => res.json())
-  .then(data => {
-     document.getElementById("pwdMsg").innerText = data.message;
-
-  if (data.message.includes("success")) {
-    // 🔐 token delete
-    localStorage.removeItem("adminToken");
-
-    alert("Password changed. Please login again.");
-
-    // login page पर भेजो
-    window.location.href = "login.html";
-  }
-});
+  .then(d => {
+    pwdMsg.innerText = d.message;
+    if (d.message.includes("success")) logout();
+  });
 }
-</script>
 
-<script>
 function logout() {
-  // 🔐 Token हटाओ
   localStorage.removeItem("adminToken");
-
-  // Extra safety (cache clear)
-  sessionStorage.clear();
-
-  // Login page पर redirect
   window.location.replace("login.html");
 }
-</script>
 
+const busInput = document.getElementById("bus");
+const stationsInput = document.getElementById("stations");
+</script>
 
 </div>
 </body>

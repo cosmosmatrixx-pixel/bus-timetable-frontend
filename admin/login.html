@@ -11,10 +11,9 @@
 
     <h2>Admin Login</h2>
 
-    <input type="text" id="username" placeholder="Username">
-    <input type="password" id="password" placeholder="Password">
+    <input id="username" placeholder="Username">
+    <input id="password" type="password" placeholder="Password">
 
-    <!-- ❌ form नहीं है -->
     <button type="button" onclick="login()">Login</button>
 
     <a href="forgot-password.html" class="forgot-link">
@@ -22,7 +21,6 @@
     </a>
 
     <p id="msg"></p>
-
   </div>
 </div>
 
@@ -30,25 +28,21 @@
 const API = "https://bus-timetable-backend.onrender.com";
 
 function login() {
-  const username = document.getElementById("username").value.trim();
-  const password = document.getElementById("password").value.trim();
+  const username = usernameInput.value.trim();
+  const password = passwordInput.value.trim();
 
   if (!username || !password) {
-    alert("Please enter username & password");
+    msg.innerText = "Enter username & password";
     return;
   }
 
   fetch(`${API}/admin/login`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username, password })
   })
   .then(res => {
-    if (!res.ok) {
-      throw new Error("Login API failed");
-    }
+    if (!res.ok) throw new Error("Login failed");
     return res.json();
   })
   .then(data => {
@@ -56,15 +50,17 @@ function login() {
       localStorage.setItem("adminToken", data.token);
       window.location.href = "dashboard.html";
     } else {
-      document.getElementById("msg").innerText =
-        "Invalid username or password";
+      msg.innerText = "Invalid credentials";
     }
   })
-  .catch(err => {
-    console.error(err);
-    alert("Server error. Please try again.");
+  .catch(() => {
+    msg.innerText = "Server error";
   });
 }
+
+const usernameInput = document.getElementById("username");
+const passwordInput = document.getElementById("password");
+const msg = document.getElementById("msg");
 </script>
 
 </body>

@@ -1,14 +1,12 @@
 const API = "https://bus-timetable-backend.onrender.com";
 
 function sendOTP() {
-  const email = document.getElementById("email").value;
-
   fetch(`${API}/admin/forgot-password`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email })
+    body: JSON.stringify({ email: email.value })
   })
-  .then(res => res.json())
+  .then(r => r.json())
   .then(d => otpMsg.innerText = d.message);
 }
 
@@ -22,6 +20,6 @@ function resetPassword() {
       newPassword: newPassword.value
     })
   })
-  .then(res => res.json())
+  .then(r => r.json())
   .then(d => resetMsg.innerText = d.message);
 }

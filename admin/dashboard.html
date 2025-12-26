@@ -7,6 +7,20 @@
 </head>
 <body>
 
+
+  <hr />
+
+<h3>Upload Buses (CSV)</h3>
+
+<form id="csvUploadForm">
+  <input type="file" id="csvFile" accept=".csv" required />
+  <br /><br />
+  <button type="submit">Upload CSV</button>
+</form>
+
+<p id="uploadStatus"></p>
+
+
 <div class="container">
 
 <div class="dashboard-header">
@@ -152,6 +166,53 @@ function logout() {
   location.replace("login.html");
 }
 </script>
+
+
+<script>
+  document
+    .getElementById("csvUploadForm")
+    .addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const fileInput = document.getElementById("csvFile");
+      const status = document.getElementById("uploadStatus");
+
+      if (!fileInput.files.length) {
+        status.innerText = "❌ Please select a CSV file";
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("file", fileInput.files[0]);
+
+      status.innerText = "⏳ Uploading...";
+
+      try {
+        const res = await fetch(
+          "http://localhost:3000/admin/import-buses",
+          {
+            method: "POST",
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("token"),
+            },
+            body: formData,
+          }
+        );
+
+        const data = await res.json();
+
+        if (data.success) {
+          status.innerText =
+            "✅ Upload successful. Rows added: " + data.inserted;
+        } else {
+          status.innerText = "❌ Upload failed";
+        }
+      } catch (err) {
+        status.innerText = "❌ Server error";
+      }
+    });
+</script>
+
 
 </body>
 </html>

@@ -167,51 +167,59 @@ function logout() {
 }
 </script>
 
-
 <script>
-  document
-    .getElementById("csvUploadForm")
-    .addEventListener("submit", async function (e) {
-      e.preventDefault();
+document
+  .getElementById("csvUploadForm")
+  .addEventListener("submit", async function (e) {
+    e.preventDefault();
 
-      const fileInput = document.getElementById("csvFile");
-      const status = document.getElementById("uploadStatus");
+    const status = document.getElementById("uploadStatus");
+    const fileInput = document.getElementById("csvFile");
+    const token = localStorage.getItem("adminToken");
 
-      if (!fileInput.files.length) {
-        status.innerText = "❌ Please select a CSV file";
-        return;
-      }
+    if (!token) {
+      alert("Admin login required");
+      location.replace("login.html");
+      return;
+    }
 
-      const formData = new FormData();
-      formData.append("file", fileInput.files[0]);
+    if (!fileInput.files.length) {
+      status.innerText = "❌ Please select a CSV file";
+      return;
+    }
 
-      status.innerText = "⏳ Uploading...";
+    const formData = new FormData();
+    formData.append("file", fileInput.files[0]);
 
-      try {
-        const res = await fetch(
-          "http://localhost:3000/admin/import-buses",
-          {
-            method: "POST",
-            headers: {
-              Authorization: "Bearer " + localStorage.getItem("token"),
-            },
-            body: formData,
-          }
-        );
+    status.innerText = "⏳ Uploading...";
 
-        const data = await res.json();
-
-        if (data.success) {
-          status.innerText =
-            "✅ Upload successful. Rows added: " + data.inserted;
-        } else {
-          status.innerText = "❌ Upload failed";
+    try {
+      const res = await fetch(
+        "https://bus-timetable-backend.onrender.com/admin/import-buses",
+        {
+          method: "POST",
+          headers: {
+            Authorization: "Bearer " + token
+          },
+          body: formData
         }
-      } catch (err) {
-        status.innerText = "❌ Server error";
+      );
+
+      const data = await res.json();
+
+      if (data.success) {
+        status.innerText =
+          "✅ Upload successful. Rows added: " + data.inserted;
+      } else {
+        status.innerText = "❌ Upload failed";
       }
-    });
+    } catch (err) {
+      status.innerText = "❌ Server error";
+    }
+  });
 </script>
+
+
 
 
 </body>

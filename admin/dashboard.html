@@ -2,50 +2,28 @@
 <html>
 <head>
   <title>Admin Dashboard</title>
-  <meta http-equiv="Cache-Control" content="no-store">
   <link rel="stylesheet" href="../style.css">
 </head>
 <body>
 
+<h2>Admin Dashboard</h2>
+<button onclick="logout()">Logout</button>
 
-  <hr />
+<hr>
 
 <h3>Upload Buses (CSV)</h3>
 
 <form id="csvUploadForm">
-  <input type="file" id="csvFile" accept=".csv" required />
-  <br /><br />
-  <button type="submit">Upload CSV</button>
+  <input type="file" id="csvFile" accept=".csv" required>
+  <button type="submit">Upload</button>
 </form>
 
 <p id="uploadStatus"></p>
 
+<hr>
 
-<div class="container">
-
-<div class="dashboard-header">
-  <h2>Admin Dashboard</h2>
-  <button class="logout-btn" type="button" onclick="logout()">Logout</button>
-</div>
-
-<h3>Add / Edit Route</h3>
-
-<input id="bus" placeholder="Bus Name">
-<textarea id="stations" rows="6" placeholder="Station,Time"></textarea>
-
-<button type="button" onclick="saveRoute()">Save</button>
-<p id="msg"></p>
-
-<h3>Change Password</h3>
-<input id="oldPassword" type="password" placeholder="Old Password">
-<input id="newPassword" type="password" placeholder="New Password">
-<button type="button" onclick="changePassword()">Change</button>
-<p id="pwdMsg"></p>
-
-<h3>All Routes</h3>
-<div id="routeList"></div>
-
-</div>
+<h3>Uploaded Buses</h3>
+<div id="busList">Loading...</div>
 
 <script>
 const API = "https://bus-timetable-backend.onrender.com";
@@ -53,174 +31,65 @@ const token = localStorage.getItem("adminToken");
 
 if (!token) location.replace("login.html");
 
-const bus = document.getElementById("bus");
-const stations = document.getElementById("stations");
-const routeList = document.getElementById("routeList");
-let editId = null;
-
-/* LOAD */
-function loadRoutes() {
-  fetch(`${API}/admin/routes`, {
-    headers: { Authorization: "Bearer " + token }
+/* LOAD BUSES */
+function loadBuses() {
+  fetch(`${API}/admin/buses`, {
+    headers: {
+      Authorization: "Bearer " + token
+    }
   })
   .then(r => r.json())
   .then(data => {
     if (!data.length) {
-      routeList.innerHTML = "No routes";
+      busList.innerHTML = "No buses uploaded";
       return;
     }
- 
-    routeList.innerHTML = data.map(r => `
-  <div class="route-card">
-    <div class="route-name">${r.bus}</div>
-    <div class="route-actions">
-      <button class="edit-btn" onclick="editRoute(${r.id})">Edit</button>
-      <button class="delete-btn" onclick="deleteRoute(${r.id})">Delete</button>
-    </div>
-  </div>
-`).join("");
 
-
+    busList.innerHTML = data.map(b => `
+      <div style="border:1px solid #ccc; padding:8px; margin:6px 0">
+        <b>${b.bus_number}</b><br>
+        ${b.route_from} → ${b.route_to}<br>
+        ${b.departure_time} – ${b.arrival_time}<br>
+        Depot: ${b.depot}
+      </div>
+    `).join("");
   });
 }
-loadRoutes();
+loadBuses();
 
-/* SAVE */
-function saveRoute() {
-  const busName = bus.value.trim();
-  const list = stations.value.split("\n")
-    .map(l => l.split(","))
-    .filter(p => p.length === 2)
-    .map(p => ({ name: p[0], time: p[1] }));
+/* CSV UPLOAD */
+document.getElementById("csvUploadForm").addEventListener("submit", async e => {
+  e.preventDefault();
 
-  if (!busName || list.length < 2) {
-    alert("Invalid data");
-    return;
-  }
+  const formData = new FormData();
+  formData.append("file", csvFile.files[0]);
 
-  const url = editId
-    ? `${API}/admin/update-route/${editId}`
-    : `${API}/admin/add-route`;
+  uploadStatus.innerText = "Uploading...";
 
-  fetch(url, {
-    method: editId ? "PUT" : "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + token
-    },
-    body: JSON.stringify({ bus: busName, stations: list })
-  })
-  .then(() => {
-    bus.value = "";
-    stations.value = "";
-    editId = null;
-    loadRoutes();
-  });
-}
-
-/* EDIT */
-function editRoute(id) {
-  fetch(`${API}/admin/route/${id}`, {
-    headers: { Authorization: "Bearer " + token }
-  })
-  .then(r => r.json())
-  .then(d => {
-    bus.value = d.bus;
-    stations.value = d.stations.map(s => `${s.name},${s.time}`).join("\n");
-    editId = id;
-  });
-}
-
-/* DELETE */
-function deleteRoute(id) {
-  if (!confirm("Delete?")) return;
-  fetch(`${API}/admin/delete-route/${id}`, {
-    method: "DELETE",
-    headers: { Authorization: "Bearer " + token }
-  })
-  .then(loadRoutes);
-}
-
-/* PASSWORD */
-function changePassword() {
-  fetch(`${API}/admin/change-password`, {
+  const res = await fetch(`${API}/admin/import-buses`, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
       Authorization: "Bearer " + token
     },
-    body: JSON.stringify({
-      oldPassword: oldPassword.value,
-      newPassword: newPassword.value
-    })
-  })
-  .then(r => r.json())
-  .then(d => {
-    pwdMsg.innerText = d.message;
-    if (d.message.includes("success")) logout();
+    body: formData
   });
-}
 
+  const data = await res.json();
+
+  if (data.success) {
+    uploadStatus.innerText = "Uploaded: " + data.inserted;
+    loadBuses();
+  } else {
+    uploadStatus.innerText = "Upload failed";
+  }
+});
+
+/* LOGOUT */
 function logout() {
   localStorage.removeItem("adminToken");
   location.replace("login.html");
 }
 </script>
-
-<script>
-document
-  .getElementById("csvUploadForm")
-  .addEventListener("submit", async function (e) {
-    e.preventDefault();
-
-    const status = document.getElementById("uploadStatus");
-    const fileInput = document.getElementById("csvFile");
-    const token = localStorage.getItem("adminToken");
-
-    if (!token) {
-      alert("Admin login required");
-      location.replace("login.html");
-      return;
-    }
-
-    if (!fileInput.files.length) {
-      status.innerText = "❌ Please select a CSV file";
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("file", fileInput.files[0]);
-
-    status.innerText = "⏳ Uploading...";
-
-    try {
-      const res = await fetch(
-        "https://bus-timetable-backend.onrender.com/admin/import-buses",
-        {
-          method: "POST",
-          headers: {
-            Authorization: "Bearer " + token
-          },
-          body: formData
-        }
-      );
-
-      const data = await res.json();
-
-      if (data.success) {
-        status.innerText =
-          "✅ Upload successful. Rows added: " + data.inserted;
-      } else {
-        status.innerText = "❌ Upload failed";
-      }
-    } catch (err) {
-      status.innerText = "❌ Server error";
-    }
-  });
-</script>
-
-
-
 
 </body>
 </html>

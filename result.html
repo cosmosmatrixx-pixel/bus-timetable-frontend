@@ -3,6 +3,7 @@
 <head>
   <title>Bus Results</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 </head>
@@ -41,23 +42,72 @@ fetch(`${API}/search?from=${from}&to=${to}`)
     <div class="result-header">
       🚌 ${bus.bus}
 
-      <button class="share-btn"
-        onclick="shareRoute('${bus.bus}', '${from}', '${to}')">
-        📤 Share
-      </button>
+<button class="share-btn"
+  title="Share on WhatsApp"
+  onclick="shareRoute('${bus.bus}', '${from}', '${to}')">
+  <i class="fab fa-whatsapp"></i>
+</button>
+
     </div>
     <div class="station-list">
 `;
 
 
-        bus.stations.forEach(s => {
-          html += `
-            <div class="station-item">
-              <span class="station-name">${s.name}</span>
-              <span class="station-time">${s.time}</span>
-            </div>
-          `;
-        });
+        // bus.stations.forEach(s => {
+        //   html += `
+        //     <div class="station-item">
+        //       <span class="station-name">${s.name}</span>
+        //       <span class="station-time">${s.time}</span>
+        //     </div>
+        //   `;
+        // });
+
+        // new code in place of above only 
+        const stations = bus.stations;
+const first = stations[0];
+const last = stations[stations.length - 1];
+const middle = stations.slice(1, -1);
+
+html += `
+  <div class="station-item">
+    <span class="station-name">${first.name}</span>
+    <span class="station-time">${first.time}</span>
+  </div>
+`;
+
+if (middle.length > 0) {
+  html += `
+    <div class="middle-stations" id="mid-${bus._id}">
+  `;
+
+  middle.forEach(s => {
+    html += `
+      <div class="station-item">
+        <span class="station-name">${s.name}</span>
+        <span class="station-time">${s.time}</span>
+      </div>
+    `;
+  });
+
+  html += `
+    </div>
+
+    <button class="toggle-btn"
+      onclick="toggleStations('${bus._id}', this)">
+      Show More ⌄
+    </button>
+  `;
+}
+
+if (stations.length > 1) {
+  html += `
+    <div class="station-item">
+      <span class="station-name">${last.name}</span>
+      <span class="station-time">${last.time}</span>
+    </div>
+  `;
+}
+
 
         html += `
             </div>
@@ -90,6 +140,22 @@ fetch(`${API}/search?from=${from}&to=${to}`)
 }
 
 </script>
+
+
+<script>
+function toggleStations(id, btn) {
+  const el = document.getElementById("mid-" + id);
+
+  if (el.style.display === "block") {
+    el.style.display = "none";
+    btn.innerText = "Show More ⌄";
+  } else {
+    el.style.display = "block";
+    btn.innerText = "Hide ▲";
+  }
+}
+</script>
+
 
 </body>
 </html>

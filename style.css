@@ -41,7 +41,6 @@ body {
    ========================= */
 body {
   background: linear-gradient(135deg, #e0e7ff, #f8fafc);
-  min-height: 100vh;
   color: var(--text);
 }
 
@@ -364,15 +363,13 @@ li button:last-child {
    ========================= */
 
 .search-wrapper {
-  min-height: 100vh;
-   width: 100%;
+  width: 100%;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;   /* ❌ center हटाया */
   background: linear-gradient(135deg, #e0e7ff, #f8fafc);
-  padding: 20px;
+  padding: 16px;
 }
-
 
 
 .search-card {
@@ -382,6 +379,7 @@ li button:last-child {
   padding: 30px;
   border-radius: 16px;
   box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  margin-top: 20px;  /* ⬅️ navbar से हल्का gap */
 }
 
 .search-card h2 {
@@ -1000,4 +998,17 @@ li button:last-child {
 .footer ul li a:hover {
   color: #ffffff;
   text-decoration: underline;
+}
+
+
+.logo-link {
+  color: white;
+  text-decoration: none;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.logo-link:hover {
+  text-decoration: none;
+  opacity: 0.9;
 }

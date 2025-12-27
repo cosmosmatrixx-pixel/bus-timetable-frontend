@@ -1,3 +1,5 @@
+
+
 const API = "https://bus-timetable-backend.onrender.com";
 
 function sendOTP() {
@@ -6,8 +8,14 @@ function sendOTP() {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email: email.value })
   })
-  .then(r => r.json())
-  .then(d => otpMsg.innerText = d.message);
+  .then(res => {
+    if (!res.ok) throw new Error("Request failed");
+    return res.json();
+  })
+  .then(d => otpMsg.innerText = d.message)
+  .catch(() => {
+    otpMsg.innerText = "❌ Server error. Try again.";
+  });
 }
 
 function resetPassword() {
@@ -20,6 +28,12 @@ function resetPassword() {
       newPassword: newPassword.value
     })
   })
-  .then(r => r.json())
-  .then(d => resetMsg.innerText = d.message);
+  .then(res => {
+    if (!res.ok) throw new Error("Reset failed");
+    return res.json();
+  })
+  .then(d => resetMsg.innerText = d.message)
+  .catch(() => {
+    resetMsg.innerText = "❌ Server error. Try again.";
+  });
 }

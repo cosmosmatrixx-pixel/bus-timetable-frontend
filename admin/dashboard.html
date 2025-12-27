@@ -47,17 +47,23 @@ let editId = null;
 /* LOAD */
 function loadRoutes() {
   fetch(`${API}/admin/routes`, {
-    headers: { Authorization: "Bearer " + token }
-  })
-  .then(r => {
-    if (!r.ok) {
-      throw new Error("Server error: " + r.status);
+    headers: {
+      Authorization: "Bearer " + token
     }
-    return r.json();
+  })
+  .then(res => {
+    if (!res.ok) {
+      if (res.status === 401 || res.status === 403) {
+        alert("Session expired. Please login again.");
+        logout();
+      }
+      throw new Error("Failed to load routes");
+    }
+    return res.json();
   })
   .then(data => {
     if (!Array.isArray(data) || data.length === 0) {
-      routeList.innerHTML = "No routes found";
+      routeList.innerHTML = "<p>No routes found</p>";
       return;
     }
 
@@ -72,11 +78,10 @@ function loadRoutes() {
     `).join("");
   })
   .catch(err => {
-    console.error(err);
-    routeList.innerHTML = "⚠️ Failed to load routes";
+    console.error("❌ loadRoutes error:", err);
+    routeList.innerHTML = "<p>Error loading routes</p>";
   });
 }
-
 
 /* SAVE */
 function saveRoute() {
@@ -110,6 +115,7 @@ function saveRoute() {
     loadRoutes();
   });
 }
+loadRoutes();
 
 /* EDIT */
 function editRoute(id) {

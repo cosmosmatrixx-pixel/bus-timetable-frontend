@@ -186,7 +186,16 @@ let stations = [];
 // Fetch stations once
 fetch(API + "/stations")
   .then(res => res.json())
-  .then(data => stations = data);
+  .then(data => {
+    if (Array.isArray(data)) {
+      stations = data;
+    } else {
+      stations = [];
+    }
+  })
+  .catch(() => {
+    stations = [];
+  });
 
 // Attach autocomplete
 setupAutocomplete("from", "fromList");
@@ -205,9 +214,11 @@ function setupAutocomplete(inputId, listId) {
       return;
     }
 
-    const matches = stations.filter(s =>
-      s.toLowerCase().startsWith(value)
-    );
+  if (!Array.isArray(stations)) return;
+
+const matches = stations.filter(s =>
+  s.toLowerCase().startsWith(value)
+);
 
     matches.slice(0, 10).forEach(item => {
       const div = document.createElement("div");

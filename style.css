@@ -1046,3 +1046,128 @@ li button:last-child {
 .suggestions div:hover {
   background: #eef2ff;
 }
+
+/* new .suggestions */
+/* =========================
+   Search Card – HERO upgrade
+   ========================= */
+
+.search-card {
+  background: linear-gradient(180deg, #ffffff, #f8fafc);
+  border: 1px solid #e5e7eb;
+}
+
+.search-card h2 {
+  font-size: 20px;
+  letter-spacing: 0.5px;
+}
+
+.search-card input {
+  font-size: 15px;
+}
+
+.search-btn {
+  margin-top: 8px;
+  box-shadow: 0 10px 25px rgba(37,99,235,0.25);
+}
+
+.search-btn:active {
+  transform: scale(0.98);
+}
+
+
+
+/* =========================
+   Result Card – Premium Look
+   ========================= */
+
+.result-card {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.result-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 45px rgba(0,0,0,0.12);
+}
+
+
+
+.result-header {
+  font-size: 15px;
+  letter-spacing: 0.3px;
+}
+
+.result-header span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+
+
+.station-item {
+  position: relative;
+  padding-left: 18px;
+}
+
+.station-item::before {
+  content: "";
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  background: #2563eb;
+  border-radius: 50%;
+  transform: translateY(-50%);
+}
+
+
+.toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.toggle-btn:hover {
+  text-decoration: underline;
+}
+
+
+
+.station-name {
+  font-weight: 500;
+}
+
+.station-time {
+  font-size: 12px;
+}
+
+.result-header {
+  font-weight: 700;
+}
+
+
+
+@media (max-width: 600px) {
+  .result-card {
+    margin-bottom: 20px;
+  }
+
+  .station-item {
+    padding: 12px 14px;
+  }
+
+  .search-card {
+    padding: 24px 20px;
+  }
+}
+
+
+button {
+  transition: all 0.2s ease;
+}
+
+button:active {
+  transform: scale(0.97);
+}

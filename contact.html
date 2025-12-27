@@ -1,89 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" href="style.css">
-  <title>Bus Time Table</title>
+  <title>Contact Us | HR Route</title>
+  <link rel="stylesheet" href="style.css">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 </head>
 <body>
 
-<header class="navbar">
+    <header class="navbar">
   <div class="nav-container">
 
-    <div class="logo">
-      🚌 HR Route
-    </div>
+    <div class="logo">🚌 HR Route</div>
 
     <nav class="nav-links" id="navLinks">
       <a href="index.html">Home</a>
-      <a href="index.html#search">Search</a>
+      <a href="search.html">Search</a>
       <a href="about.html">About Us</a>
       <a href="blog.html">Our Blog</a>
       <a href="contact.html">Contact Us</a>
-       <a href="privacy-policy.html">Privacy Policy</a>
     </nav>
 
-    <div class="menu-toggle" onclick="toggleMenu()">
-      ☰
-    </div>
+    <div class="menu-toggle" onclick="toggleMenu()">☰</div>
 
   </div>
 </header>
 
 
-<div class="search-wrapper">
-  <div class="search-card">
+<!-- NAVBAR -->
 
-    <h2>🚌 Bus Time Table</h2>
+<div class="container">
+  <h2>Contact Us</h2>
 
-    <div class="form-group">
-      <input id="from" placeholder="From (जैसे: Panipat)">
-    </div>
-
-    <div class="form-group">
-      <input id="to" placeholder="To (जैसे: Chandigarh)">
-    </div>
-
-    <button class="search-btn" onclick="search()">Search</button>
-    
-
-    <div class="telegram-box">
-      📢 <a href="https://t.me/yourchannel" target="_blank">
-        अपनी जानकारी Telegram पर साझा करें
-      </a>
-    </div>
-
-    <div id="results"></div>
-
-  </div>
+  <p>Email: support@hrroute.in</p>
+  <p>Telegram: @hrroute</p>
+  <p>Feedback & suggestions welcome 🙏</p>
 </div>
-
-
-
-
-<script>
-function search() {
-  console.log("Search clicked");
-}
-</script>
-
-<script>
-function search() {
-  const from = document.getElementById("from").value.trim();
-  const to = document.getElementById("to").value.trim();
-
-  if (!from || !to) {
-    alert("Please enter From and To");
-    return;
-  }
-
-  window.location.href =
-    `result.html?from=${from}&to=${to}`;
-}
-</script>
-
-
 
 
 <footer class="footer">
@@ -123,7 +74,7 @@ function search() {
     <div class="footer-col">
       <h3>Gallery</h3>
       <div class="gallery">
-  <img src="images/hr1.jpg" alt="Bus">
+   <img src="images/hr1.jpg" alt="Bus">
   <img src="images/hr2.jpg " alt="Bus">
   <img src="images/hr3.jpg" alt="Bus">
   <img src="images/hr4.jpg" alt="Bus">
@@ -156,18 +107,12 @@ function search() {
 
 </footer>
 
-
-
-
+<!-- toggleMenu script -->
 <script>
 function toggleMenu() {
   document.getElementById("navLinks").classList.toggle("show");
 }
 </script>
 
-
 </body>
-
-
 </html>
-

@@ -9,6 +9,30 @@
 </head>
 <body>
 
+<header class="navbar">
+  <div class="nav-container">
+
+    <div class="logo">
+      🚌 HR Route
+    </div>
+
+    <nav class="nav-links" id="navLinks">
+      <a href="index.html">Home</a>
+      <a href="index.html#search">Search</a>
+      <a href="about.html">About Us</a>
+      <a href="blog.html">Our Blog</a>
+      <a href="contact.html">Contact Us</a>
+        <a href="privacy-policy.html">Privacy Policy</a>
+    </nav>
+
+    <div class="menu-toggle" onclick="toggleMenu()">
+      ☰
+    </div>
+
+  </div>
+</header>
+
+
 <div class="container">
 
   <h2>🚌 Available Buses</h2>
@@ -16,6 +40,79 @@
   <div id="result">Loading...</div>
 
 </div>
+
+
+
+<footer class="footer">
+
+  <div class="footer-container">
+
+    <!-- Column 1 -->
+    <div class="footer-col">
+      <h3>HR ROUTE</h3>
+      <p class="visitor">Visitors : <b>11068117</b></p>
+
+      <ul>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="contact.html">Contact Us</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms & Condition</a></li>
+        <li><a href="#">FAQs & Help</a></li>
+      </ul>
+    </div>
+
+    <!-- Column 2 -->
+    <div class="footer-col">
+      <h3>Contact</h3>
+      <p>📍 Sector-17, Chandigarh</p>
+      <p>📞 +91-720-270-4014</p>
+      <p>✉️ hrroute@gmail.com</p>
+
+      <div class="social-icons">
+        <a href="#">🌐</a>
+        <a href="#">📘</a>
+        <a href="#">📸</a>
+        <a href="#">▶️</a>
+      </div>
+    </div>
+
+    <!-- Column 3 -->
+    <div class="footer-col">
+      <h3>Gallery</h3>
+      <div class="gallery">
+<img src="images/hr1.jpg" alt="Bus">
+  <img src="images/hr2.jpg " alt="Bus">
+  <img src="images/hr3.jpg" alt="Bus">
+  <img src="images/hr4.jpg" alt="Bus">
+  <img src="images/hr5.jpg" alt="Bus">
+  <img src="images/hr6.png" alt="Bus">
+      </div>
+    </div>
+
+    <!-- Column 4 -->
+    <div class="footer-col">
+      <h3>Disclaimer</h3>
+      <p class="disclaimer">
+        यात्रियों को सलाह दी जाती है कि घर से
+        निकलने से पहले बस स्टैंड से
+        बस की टाइमिंग की पुष्टि कर लें।
+        समय व रूट में परिवर्तन संभव है।
+        किसी भी असुविधा के लिए
+        HR Route जिम्मेदार नहीं होगा।
+      </p>
+    </div>
+
+  </div>
+
+  <!-- Bottom Bar -->
+  <div class="footer-bottom">
+    <p>Designed & Developed by 👨‍🎓 Graduate.</p>
+    <p>2025 © HR ROUTE | All Rights Reserved</p>
+    <p>Made with ❤️ for Haryana Citizens</p>
+  </div>
+
+</footer>
+
 
 <script>
   const params = new URLSearchParams(window.location.search);
@@ -155,6 +252,13 @@ function toggleStations(id, btn) {
   }
 }
 </script>
+
+<script>
+function toggleMenu() {
+  document.getElementById("navLinks").classList.toggle("show");
+}
+</script>
+
 
 
 </body>
